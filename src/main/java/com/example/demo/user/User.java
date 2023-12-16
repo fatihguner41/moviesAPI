@@ -1,11 +1,17 @@
 package com.example.demo.user;
+import com.example.demo.dto.SignUpRequest;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Table("users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     private Long user_id;
@@ -20,6 +26,12 @@ public class User {
 
     public User(){
 
+    }
+
+    public User(SignUpRequest signUpRequest) {
+        this.password=signUpRequest.getPassword();
+        this.username = signUpRequest.getUsername();
+        this.email = signUpRequest.getEmail();
     }
     public User(String username, String email) {
 
@@ -41,9 +53,7 @@ public class User {
         this.user_id = user_id;
     }
 
-    public String getUsername() {
-        return username;
-    }
+
 
     public void setUsername(String username) {
         this.username = username;
@@ -57,9 +67,7 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
+
 
     public void setPassword(String password) {
         this.password = password;
@@ -71,5 +79,38 @@ public class User {
 
     public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("USER"));
     }
 }

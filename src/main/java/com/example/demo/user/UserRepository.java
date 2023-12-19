@@ -11,6 +11,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
     @Modifying
-    @Query("INSERT INTO users (username, password, email, created_at) VALUES (:username, :password, :email, CURRENT_TIMESTAMP)")
+    @Query("INSERT INTO users (username, password, email, created_at, role) VALUES (:username, :password, :email, CURRENT_TIMESTAMP,'USER')")
     void addUser(String username, String password, String email);
 }

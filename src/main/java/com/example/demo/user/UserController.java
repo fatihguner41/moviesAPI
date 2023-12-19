@@ -1,4 +1,6 @@
 package com.example.demo.user;
+import com.example.demo.dto.AuthenticatedUserRequest;
+import com.example.demo.dto.UpdateAuthenticatedUserRequest;
 import com.example.demo.services.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +34,7 @@ public class UserController {
 
         try {
             User user=userService.getUserByUsername(username);
-            UserDTO userDTO = new UserDTO(user.getUsername(),user.getEmail());
+            UserDTO userDTO = new UserDTO(user.getUsername(),user.getEmail(),user.getRole());
             return ResponseEntity.ok(userDTO);
         } catch (UsernameNotFoundException usernameNotFoundException) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(usernameNotFoundException.getMessage());
@@ -40,9 +42,49 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
     }
-    @DeleteMapping("/{id}")
-    public void deleteUserById(@PathVariable Long id){
-        userService.deleteUserById(id);
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getAuthenticatedUser(@RequestHeader("Authorization") String bearerToken){
+        try {
+            String token=extractBearerToken(bearerToken);
+            return ResponseEntity.ok(userService.getAuthenticatedUser(token));
+        } catch (UsernameNotFoundException usernameNotFoundException) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(usernameNotFoundException.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+    }
+
+    @PostMapping("/me/update")
+    public ResponseEntity<?> updateAuthenticatedUser(@RequestHeader("Authorization") String bearerToken,
+                                                     @RequestBody UpdateAuthenticatedUserRequest updateAuthenticatedUserRequest){
+        try {
+            String token=extractBearerToken(bearerToken);
+            return ResponseEntity.ok(userService.updateAuthenticatedUser(token,updateAuthenticatedUserRequest));
+        } catch (UsernameNotFoundException usernameNotFoundException) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(usernameNotFoundException.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+    }
+    @DeleteMapping("/me/delete")
+    public ResponseEntity<String> deleteAuthenticatedUser(@RequestHeader("Authorization") String bearerToken){
+        try {
+            String token=extractBearerToken(bearerToken);
+            return ResponseEntity.ok(userService.deleteAuthenticatedUser(token));
+        } catch (UsernameNotFoundException usernameNotFoundException) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(usernameNotFoundException.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+    }
+
+    private String extractBearerToken(String authorizationHeader) {
+        // Authorization header'ındaki Bearer token'ını çıkart
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+        return null;
     }
 
 }

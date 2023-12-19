@@ -1,6 +1,7 @@
 package com.example.demo.user;
 import com.example.demo.dto.SignUpRequest;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +22,8 @@ public class User implements UserDetails {
 
     private String password;
     private LocalDateTime created_at;
+    private UserRole role;
+
 
     // getters, setters, constructors, etc.
 
@@ -32,6 +35,7 @@ public class User implements UserDetails {
         this.password=signUpRequest.getPassword();
         this.username = signUpRequest.getUsername();
         this.email = signUpRequest.getEmail();
+        this.role= UserRole.USER;
     }
     public User(String username, String email) {
 
@@ -111,6 +115,14 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("USER"));
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }

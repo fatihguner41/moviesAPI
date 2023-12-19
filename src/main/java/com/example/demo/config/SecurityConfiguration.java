@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.user.UserRole;
 import com.example.demo.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,12 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers("/auth/**")
                         .permitAll()
+                        .requestMatchers("/movie/delete/**")
+                        .hasAnyAuthority(UserRole.ADMIN.name())
+                        .requestMatchers("/movie/update/**")
+                        .hasAnyAuthority(UserRole.ADMIN.name())
+                        .requestMatchers("/movie/create")
+                        .hasAnyAuthority(UserRole.ADMIN.name())
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
@@ -50,11 +57,13 @@ public class SecurityConfiguration {
         return authenticationProvider;
     }
 
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
 
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

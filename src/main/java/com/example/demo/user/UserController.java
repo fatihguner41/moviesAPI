@@ -1,10 +1,7 @@
 package com.example.demo.user;
-import com.example.demo.dto.AuthenticatedUserRequest;
-import com.example.demo.dto.UpdateAuthenticatedUserRequest;
-import com.example.demo.services.JWTService;
+import com.example.demo.dto.user.UpdateAuthenticatedUserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -79,7 +76,7 @@ public class UserController {
         }
     }
 
-    private String extractBearerToken(String authorizationHeader) {
+    public String extractBearerToken(String authorizationHeader) {
         // Authorization header'ındaki Bearer token'ını çıkart
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring(7);

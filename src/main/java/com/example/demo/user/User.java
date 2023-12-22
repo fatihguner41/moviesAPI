@@ -1,7 +1,6 @@
 package com.example.demo.user;
-import com.example.demo.dto.SignUpRequest;
+import com.example.demo.dto.user.SignUpRequest;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

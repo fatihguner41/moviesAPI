@@ -1,16 +1,16 @@
-package com.example.demo.dto;
+package com.example.demo.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-
-
-public class UpdateAuthenticatedUserRequest {
+@NoArgsConstructor
+public class UpdateAuthenticatedUserResponse {
     private String username;
     private String email;
     private String password;
+    private String token;
+    private String refreshToken;
 }

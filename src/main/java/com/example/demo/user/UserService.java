@@ -1,8 +1,7 @@
 package com.example.demo.user;
-import com.example.demo.dto.AuthenticatedUserRequest;
-import com.example.demo.dto.AuthenticatedUserResponse;
-import com.example.demo.dto.UpdateAuthenticatedUserRequest;
-import com.example.demo.dto.UpdateAuthenticatedUserResponse;
+import com.example.demo.dto.user.AuthenticatedUserResponse;
+import com.example.demo.dto.user.UpdateAuthenticatedUserRequest;
+import com.example.demo.dto.user.UpdateAuthenticatedUserResponse;
 import com.example.demo.services.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service

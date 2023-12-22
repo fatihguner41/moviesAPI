@@ -1,4 +1,4 @@
-package com.example.demo.movie;
+package com.example.demo.movielists;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("movies_categories")
+import java.util.Set;
+
+@Table("movies_movielists")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovieCategory {
+public class MovieMovieList {
     @Column("movie_id")
     private Long movieId;
-    @Column("category_id")
-    private Long categoryId;
+
 }

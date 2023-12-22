@@ -1,9 +1,9 @@
 package com.example.demo.auth;
 
-import com.example.demo.dto.RefreshTokenRequest;
-import com.example.demo.dto.SignInRequest;
-import com.example.demo.dto.SignInResponse;
-import com.example.demo.dto.SignUpRequest;
+import com.example.demo.dto.user.RefreshTokenRequest;
+import com.example.demo.dto.user.SignInRequest;
+import com.example.demo.dto.user.SignInResponse;
+import com.example.demo.dto.user.SignUpRequest;
 import com.example.demo.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

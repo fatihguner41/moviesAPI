@@ -1,12 +1,14 @@
 package com.example.demo.movie;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/movie")
 public class MovieController {
      MovieService movieService;
+     public static final int MAX_PAGE_SIZE=100;
 
      @Autowired
     public MovieController(MovieService movieService) {
@@ -14,8 +16,19 @@ public class MovieController {
     }
 
     @GetMapping
-    public Iterable<Movie> getMovies(){
-        return movieService.getMovies();
+    public ResponseEntity<?> getMovies(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "10") int size,
+                                    @RequestParam(defaultValue = "imdb_score") String sortBy,
+                                    @RequestParam(defaultValue = "") String search,
+                                    @RequestParam(defaultValue = "0") Long categoryId){
+
+         if(size>MAX_PAGE_SIZE){
+             size=MAX_PAGE_SIZE;
+         }
+         if(size<0){
+             size=0;
+         }
+         return ResponseEntity.ok(movieService.getMovies(page, size, sortBy,search,categoryId));
     }
 
     @PostMapping("/create")

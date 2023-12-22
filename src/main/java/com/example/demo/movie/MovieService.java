@@ -1,7 +1,13 @@
 package com.example.demo.movie;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MovieService {
@@ -13,8 +19,12 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public Iterable<Movie> getMovies(){
-        return movieRepository.findAll();
+    public  Iterable<Movie> getMovies(int page, int size, String sortBy, String search, Long categoryId){
+        Pageable pageable= PageRequest.of(page,size,Sort.by(sortBy).descending());
+        if(categoryId!=0L){
+            return movieRepository.findMoviesByCategoryId(categoryId,size,page*size);
+        }
+        return movieRepository.findByNameContainingIgnoreCase(pageable,search);
     }
 
     public Movie createMovie(Movie movie){

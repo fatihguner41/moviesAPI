@@ -2,6 +2,7 @@ package com.example.demo.user;
 import com.example.demo.dto.user.AuthenticatedUserResponse;
 import com.example.demo.dto.user.UpdateAuthenticatedUserRequest;
 import com.example.demo.dto.user.UpdateAuthenticatedUserResponse;
+import com.example.demo.movielists.MovieListsRepository;
 import com.example.demo.services.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,11 +21,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JWTService jwtService;
+    private final MovieListsRepository movieListsRepository;
     @Autowired
-    public UserService(UserRepository userRepository, JWTService jwtService) {
+    public UserService(UserRepository userRepository, JWTService jwtService, MovieListsRepository movieListsRepository) {
         this.userRepository = userRepository;
 
         this.jwtService = jwtService;
+        this.movieListsRepository = movieListsRepository;
     }
 
     @Bean
@@ -65,7 +68,8 @@ public class UserService {
         String username = jwtService.extractUserName(token);
         User user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("User not found"));
         if(jwtService.isTokenValid(token, user)){
-            return new AuthenticatedUserResponse(user.getUsername(),user.getEmail());
+
+            return new AuthenticatedUserResponse(user.getUsername(),user.getEmail(),movieListsRepository.getMovieListsFromAuthenticatedUser(user.getUser_id()));
         }
         return null;
 

@@ -1,10 +1,7 @@
 package com.example.demo.movie;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +17,29 @@ public class MovieService {
     }
 
     public  Iterable<Movie> getMovies(int page, int size, String sortBy, String search, Long categoryId){
-        Pageable pageable= PageRequest.of(page,size,Sort.by(sortBy).descending());
-        if(categoryId!=0L){
-            return movieRepository.findMoviesByCategoryId(categoryId,size,page*size);
+        Sort sort = Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        List<Movie> movies;
+        if(categoryId!=0) {
+            switch (sortBy) {
+                case "imdb_score":
+                    movies = movieRepository.findMoviesByCategoryIdOrderByImdbScore(categoryId);
+                    break;
+                case "income":
+                    movies = movieRepository.findMoviesByCategoryIdOrderByIncome(categoryId);
+                    break;
+                case "date":
+                    movies = movieRepository.findMoviesByCategoryIdOrderByDate(categoryId);
+                    break;
+                default:
+                    movies=movieRepository.findMoviesByCategoryIdOrderByImdbScore(categoryId);
+                    break;
+            }
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), movies.size());
+
+            return new PageImpl<>(movies.subList(start, end), pageable, movies.size());
+
         }
         return movieRepository.findByNameContainingIgnoreCase(pageable,search);
     }

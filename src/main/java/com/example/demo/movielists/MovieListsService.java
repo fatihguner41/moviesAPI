@@ -29,7 +29,7 @@ public class MovieListsService {
 
 
     public Iterable<MovieList> getMovieLists(){
-        return movieListsRepository.findAll();
+        return movieListsRepository.getMovieListsFromAdmin();
     }
 
     public MovieList createMovieList(CreateMovieListRequest createMovieListRequest,String token){

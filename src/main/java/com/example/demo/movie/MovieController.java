@@ -25,9 +25,13 @@ public class MovieController {
          if(size>MAX_PAGE_SIZE){
              size=MAX_PAGE_SIZE;
          }
-         if(size<0){
-             size=0;
+         if(size<1){
+             size=1;
          }
+
+        if(page<0){
+            page=0;
+        }
          return ResponseEntity.ok(movieService.getMovies(page, size, sortBy,search,categoryId));
     }
 
